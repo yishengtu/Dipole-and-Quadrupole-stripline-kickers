@@ -392,7 +392,7 @@ class dipole():
         self.__odd_solve()
         self.__even_solve()
 
-    def __characteristic_impedance_thickness(self, thickness = None, kf_even = 5.5, kf_geo = 5.5):
+    def __characteristic_impedance_thickness(self, thickness, kf_even, kf_geo):
         '''
 
         Get the estimated characteristic impedance for a specified thickness
@@ -403,31 +403,30 @@ class dipole():
         :return: (list), odd mode, even mode, geometric mean (characteristic impedance)
         '''
 
-        if thickness is None or thickness == 0.0:
-            return self.__odd_char_impedance, self.__even_char_impedance, self.__geo_char_impedance
-        else:
-            thick_even_imp = self.__odd_char_impedance * np.log((self.a - thickness/kf_even)/self.b) / np.log(self.a/self.b)
-            thick_geo_imp = self.__geo_char_impedance * np.log((self.a - thickness/kf_geo)/self.b) / np.log(self.a/self.b)
+        thick_even_imp = self.__odd_char_impedance * np.log((self.a - thickness/kf_even)/self.b) / np.log(self.a/self.b)
+        thick_geo_imp = self.__geo_char_impedance * np.log((self.a - thickness/kf_geo)/self.b) / np.log(self.a/self.b)
 
-            return None, thick_even_imp, thick_geo_imp
+        return None, thick_even_imp, thick_geo_imp
 
-    def get_characteristic_impedance(self, thickness = None):
+    def get_characteristic_impedance(self, thickness = None, kf_even = 5.5, kf_geo = 5.5):
         '''
 
         print the characteristic impedance
 
         :param thickness: if None or 0, then assume infinitesimal plate, else apply thickness;
                           when thickness !=0, potential and field are not available.
+        :param kf_even: (float) the scaling coefficient of the even mode
+        :param kf_geo:  (float) the scaling coefficient of the geometric mode
         :return: None
         '''
-        #
+        
         if thickness is None or thickness == 0.0:
             print ('a = ', self.a, ', b = ', self.b, ', theta_0 = ', self.theta_0, ', thickness = ', thickness)
             print ('odd mode: Z = ', self.__odd_char_impedance)
             print ('even mode: Z = ', self.__even_char_impedance)
             print ('geo (Z_o^2 + Z_e^2)^0.5: Z = ', self.__geo_char_impedance)
         else:
-            Zodd, Zeven, Zgeo = self.__characteristic_impedance_thickness(thickness=thickness)
+            Zodd, Zeven, Zgeo = self.__characteristic_impedance_thickness(thickness=thickness, kf_even = kf_even, kf_geo = kf_geo)
             print ('a = ', self.a, ', b = ', self.b, ', theta_0 = ', self.theta_0, ', thickness = ', thickness)
             # print ('odd mode: Z = ', self.__odd_char_impedance)
             print ('even mode: Z = ', Zeven)
