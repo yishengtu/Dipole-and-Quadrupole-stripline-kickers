@@ -18,7 +18,8 @@ def dipole_example():
     dipole = gd.dipole(a = a, b = b, theta_0 = theta_0, mode='odd')
 
     # print out the characteristic impedance
-    dipole.get_characteristic_impedance(thickness=8)
+    # dipole.get_characteristic_impedance(thickness=8, kf_even=5, kf_geo=5.5)     # using customized fitting value
+    dipole.get_characteristic_impedance(thickness=8)    # using default fitting value
 
     # setup 2D-scan parameters
     x = np.linspace(-a, a, 50)  # change here to change the resolution!
@@ -59,7 +60,8 @@ def quadrupole_example():
     quadrupole = qq.quadrupole(a=a, b=b, theta_0=theta_0, mode='sum')
 
     # print out the characteristic impedance
-    quadrupole.get_characteristic_impedance(thickness=5)
+    # quadrupole.get_characteristic_impedance(thickness=8, kf_sum=3, kf_geo=3.5)     # using customized fitting value
+    quadrupole.get_characteristic_impedance(thickness=5)    # using default fitting value
 
     # setup 2D-scan parameters
     x = np.linspace(-a, a, 150)  # change here to change the resolution!
