@@ -289,32 +289,31 @@ class quadrupole():
         self.__quad_solve()
         self.__sum_solve()
 
-    def __characteristic_impedance_thickness(self, thickness = None, kf_even = 3.7, kf_geo = 3.7):
+    def __characteristic_impedance_thickness(self, thickness, kf_sum, kf_geo):
         '''
 
         Get the estimated characteristic impedance for a specified thickness
 
         :param thickness: (float) thickness of the plate
-        :param kf_even: (float) the scaling coefficient of the even mode
+        :param kf_sum: (float) the scaling coefficient of the sum mode
         :param kf_geo:  (float) the scaling coefficient of the geometric mode
-        :return: (list), odd mode, even mode, geometric mean (characteristic impedance)
+        :return: (list), odd mode, sum mode, geometric mean (characteristic impedance)
         '''
 
-        if thickness is None or thickness == 0.0:
-            return self.__quad_char_impedance, self.__sum_char_impedance, self.__geo_char_impedance
-        else:
-            thick_sum_imp = self.__quad_char_impedance * np.log((self.a - thickness/kf_even)/self.b) / np.log(self.a/self.b)
-            thick_geo_imp = self.__geo_char_impedance * np.log((self.a - thickness/kf_geo)/self.b) / np.log(self.a/self.b)
+        thick_sum_imp = self.__quad_char_impedance * np.log((self.a - thickness/kf_sum)/self.b) / np.log(self.a/self.b)
+        thick_geo_imp = self.__geo_char_impedance * np.log((self.a - thickness/kf_geo)/self.b) / np.log(self.a/self.b)
 
-            return None, thick_sum_imp, thick_geo_imp
+        return None, thick_sum_imp, thick_geo_imp
 
-    def get_characteristic_impedance(self, thickness = None):
+    def get_characteristic_impedance(self, thickness = None, kf_sum = 3.7, kf_geo = 3.7):
         '''
 
         print the characteristic impedance
 
         :param thickness: if None or 0, then assume infinitesimal plate, else apply thickness;
                           when thickness !=0, potential and field are not available.
+        :param kf_sum (float) the scaling coefficient of the sum mode
+        :param kf_geo:  (float) the scaling coefficient of the geometric mode
         :return: None
         '''
 
@@ -324,7 +323,7 @@ class quadrupole():
             print ('sum mode: Z = ', self.__sum_char_impedance())
             print ('geo (Z_q^2 + Z_s^2)^0.5: Z = ', self.__geo_char_impedance)
         else:
-            Zquad, Zsum, Zgeo = self.__characteristic_impedance_thickness(thickness=thickness)
+            Zquad, Zsum, Zgeo = self.__characteristic_impedance_thickness(thickness=thickness, kf_sum = kf_sum, kf_geo = kf_geo)
             print ('a = ', self.a, ', b = ', self.b, ', theta_0 = ', self.theta_0, ', thickness = ', thickness)
             # print ('quad mode: Z = ', self.__odd_char_impedance)
             print ('sum mode: Z = ', Zsum)
@@ -353,7 +352,5 @@ class quadrupole():
             self.B_n = self.__quad_B_n
         else:  # self.mode != 'sum' and self.mode != 'quad':
             raise ValueError('mode must be \'quad\' or \'sum\'')
-
-
 
 
