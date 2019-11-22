@@ -2,8 +2,8 @@
 Yisheng Tu, Tanaji Sen, Jean-Francois Ostiguy
 '''
 
-import gitDipole as gd
-import gitQuadrupole as qq
+import Dipole as gd
+import Quadrupole as qq
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors as colors
